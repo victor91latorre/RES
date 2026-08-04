@@ -1,0 +1,15 @@
+sku,nombre,precio,costo_reposicion,stock_inicial,stock_minimo
+RP-001,Arduino uno,220,176,10,5
+RP-002,Paquete de resistencias,5,4,30,10
+RP-003,Motor L,50,40,10,5
+RP-004,Bateria cuadrada 9V,30,24,10,5
+RP-005,Protoboard chico,50,40,20,5
+RP-006,Fuente protoboard,90,72,10,5
+RP-007,Cables dupont pequenos,50,40,10,5
+RP-008,Cables dupont medianos,80,64,10,5
+RP-009,Cables dupont largos,100,80,10,5
+RP-010,Paquete de LEDs,15,12,30,10
+RP-011,Paquete de transistores,50,40,30,10
+RP-012,Paquete de sensores,150,120,10,5
+RP-013,Kit de resistencias grandes,120,96,10,5
+RP-014,Ruedas de carro x2,120,96,10,5
