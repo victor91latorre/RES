@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Matriz · Administración y Monitoreo</title>
+<title>Matriz · Resi-Store</title>
 <style>
   :root{
     --bg:#4A4F54; --panel:#D9DBDD; --panel-hd:#3A3E42; --grid:#B4B8BC;
     --text:#1B1D1F; --text-dim:#5A5F64; --text-inv:#EDEEEF;
-    --alarm:#C0392B; --alarm-bg:#F6D9D5; --warn:#B26A00; --warn-bg:#F5E7CC; --ok:#3E7D53; --okbg:#DCEBE1;
+    --alarm:#C0392B; --alarm-bg:#F6D9D5; --warn:#B26A00; --warn-bg:#F5E7CC; --ok:#3E7D53;
   }
   *{ box-sizing:border-box; }
   html,body{ margin:0; padding:0; background:var(--bg); color:var(--text);
     font-family:"Segoe UI",Roboto,Arial,sans-serif; font-size:14px; }
   .hd{ background:var(--panel-hd); color:var(--text-inv); display:flex; align-items:center;
-    justify-content:space-between; padding:10px 18px; border-bottom:2px solid #23262a; }
+    justify-content:space-between; padding:8px 18px; border-bottom:2px solid #23262a; }
+  .hd .brandbox{ display:flex; align-items:center; gap:12px; }
+  .hd .hlogo{ height:38px; width:auto; }
   .hd h1{ font-size:16px; margin:0; font-weight:600; letter-spacing:.3px; }
   .hd .clock{ font-size:13px; color:#c7cbcf; font-variant-numeric:tabular-nums; }
   .live{ display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#c7cbcf; }
@@ -53,22 +55,22 @@
   .pdv .name{ font-size:13px; font-weight:600; } .pdv .id{ font-size:11px; color:var(--text-dim); }
   .pdv .amt{ font-size:26px; font-weight:700; margin-top:6px; font-variant-numeric:tabular-nums; }
   .pdv .cnt{ font-size:11px; color:var(--text-dim); }
-  .pdv .gan{ font-size:12px; color:var(--text-dim); margin-top:4px; } .pdv .gan b{ color:var(--ok); font-variant-numeric:tabular-nums; }
-  #alarmBanner{ display:none; background:var(--alarm); color:#fff; padding:8px 18px; font-size:13px; font-weight:600;
-    letter-spacing:.3px; align-items:center; gap:10px; } #alarmBanner.show{ display:flex; }
+  .pdv .gan{ font-size:12px; color:var(--text-dim); margin-top:4px; } .pdv .gan b{ color:var(--ok); }
+  #alarmBanner{ display:none; background:var(--alarm); color:#fff; padding:8px 18px; font-size:13px; font-weight:600; align-items:center; gap:10px; }
+  #alarmBanner.show{ display:flex; }
   .toolbar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .btn{ background:#565b60; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:13px; cursor:pointer; }
   .btn:hover{ background:#6b7178; } .btn.primary{ background:#2F6FB0; } .btn.primary:hover{ background:#3a7cc0; }
-  .btn.warn{ background:var(--warn); } .btn.green{ background:#2E7D46; } .btn:disabled{ opacity:.55; }
-  .btn.sm{ padding:5px 10px; font-size:12px; }
-  input.minedit{ width:70px; padding:5px 6px; border:1px solid #9AA0A6; border-radius:3px; font-size:13px; text-align:right; font-variant-numeric:tabular-nums; }
-  input.cnt{ width:80px; padding:6px; border:1.5px solid #9AA0A6; border-radius:4px; font-size:14px; text-align:right; font-variant-numeric:tabular-nums; }
+  .btn.green{ background:#2E7D46; } .btn:disabled{ opacity:.55; } .btn.sm{ padding:5px 10px; font-size:12px; }
+  input.minedit{ width:70px; padding:5px 6px; border:1px solid #9AA0A6; border-radius:3px; font-size:13px; text-align:right; }
+  input.cnt{ width:80px; padding:6px; border:1.5px solid #9AA0A6; border-radius:4px; font-size:14px; text-align:right; }
+  input.addqty{ width:58px; margin-left:6px; padding:4px 6px; border:1.5px solid #2F6FB0; border-radius:4px; text-align:right; }
   .form-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
   @media (max-width:760px){ .form-grid{ grid-template-columns:1fr; } }
   .fg{ display:flex; flex-direction:column; } .fg.full{ grid-column:1 / -1; }
   .fg label{ font-size:12px; font-weight:600; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px; }
-  .fg input, .fg select{ font-size:15px; padding:10px; border:1.5px solid #9AA0A6; border-radius:5px; background:#fff; color:#111; }
-  .fg input:focus, .fg select:focus{ outline:2px solid #2F6FB0; border-color:#2F6FB0; }
+  .fg input{ font-size:15px; padding:10px; border:1.5px solid #9AA0A6; border-radius:5px; background:#fff; color:#111; }
+  .fg input:focus{ outline:2px solid #2F6FB0; border-color:#2F6FB0; }
   .formmsg{ font-size:13px; margin-top:6px; min-height:18px; } .formmsg.ok{ color:#2E7D46; } .formmsg.err{ color:#C0392B; }
   .branchbar{ background:#CFD2D4; border:1px solid #9AA0A6; border-radius:4px; padding:10px 12px; margin:12px 12px 0;
     display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
@@ -77,8 +79,7 @@
   .csvbox{ border:1.5px dashed #9AA0A6; border-radius:6px; padding:14px; background:#EEF0F1; }
   .drop{ font-size:13px; color:var(--text-dim); }
   code.fmt{ display:block; background:#2b2f33; color:#EDEEEF; padding:10px 12px; border-radius:5px; font-size:12px; overflow:auto; margin-top:6px; }
-  .bell{ position:relative; background:#565b60; border:none; width:42px; height:42px; border-radius:8px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; }
+  .bell{ position:relative; background:#565b60; border:none; width:42px; height:42px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
   .bell svg{ width:22px; height:22px; fill:#cfd2d4; }
   .bell.warn{ background:var(--warn); } .bell.warn svg{ fill:#fff; }
   .bell.alarm{ background:var(--alarm); animation:bpulse 1s infinite; } .bell.alarm svg{ fill:#fff; }
@@ -91,12 +92,11 @@
   .pos{ color:#2E7D46; font-weight:700; } .neg{ color:#C0392B; font-weight:700; }
   .arqsum{ display:flex; gap:20px; flex-wrap:wrap; padding:10px 12px; background:#CFD2D4; border-top:1px solid var(--grid); }
   .arqsum b{ font-size:18px; }
-  input.addqty{ width:58px; margin-left:6px; padding:4px 6px; border:1.5px solid #2F6FB0; border-radius:4px; text-align:right; font-variant-numeric:tabular-nums; }
 </style>
 </head>
 <body>
 <div class="hd">
-  <div style="display:flex; align-items:center; gap:14px;"><h1>MATRIZ · ADMINISTRACIÓN Y MONITOREO</h1></div>
+  <div class="brandbox"><img class="hlogo" src="logo.png" alt="Resi-Store"><h1>MATRIZ · ADMINISTRACIÓN Y MONITOREO</h1></div>
   <div style="display:flex; align-items:center; gap:16px;">
     <button class="bell" id="bell" onclick="goInv()" title="Alarmas de inventario">
       <svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-5v-1l-1.6-1.6V10a5.4 5.4 0 0 0-4-5.2V4a1.4 1.4 0 0 0-2.8 0v.8A5.4 5.4 0 0 0 6.6 10v4.4L5 16v1z"/></svg>
@@ -115,7 +115,7 @@
   <button class="tab" data-v="suc" onclick="switchTab('suc')">🏪 Sucursales</button>
 </div>
 <div id="alarmBanner">⚠ <span id="alarmBannerTxt"></span></div>
-<!-- ===================== MONITOREO ===================== -->
+<!-- MONITOREO -->
 <div class="view active" id="v-mon">
   <div class="kpis">
     <div class="kpi"><div class="k-lbl">Ventas hoy</div><div class="k-val" id="kVentas">0</div></div>
@@ -125,10 +125,7 @@
     <div class="kpi" id="kpiAlarm"><div class="k-lbl">Ítems bajo mínimo</div><div class="k-val" id="kBajo">0</div></div>
   </div>
   <div class="grid-main">
-    <div class="panel">
-      <div class="ph">VENTAS POR PUNTO DE VENTA (HOY)</div>
-      <div class="pb"><div class="pdvgrid" id="pdvGrid"></div></div>
-    </div>
+    <div class="panel"><div class="ph">VENTAS POR PUNTO DE VENTA (HOY)</div><div class="pb"><div class="pdvgrid" id="pdvGrid"></div></div></div>
     <div class="panel">
       <div class="ph"><span>MOVIMIENTOS EN TIEMPO REAL</span><span class="muted" id="feedCount">0</span></div>
       <div class="pb" style="padding:0;"><div class="scroll">
@@ -138,29 +135,22 @@
     </div>
   </div>
 </div>
-<!-- ===================== INVENTARIO ===================== -->
+<!-- INVENTARIO -->
 <div class="view" id="v-inv">
-  <div class="branchbar">
-    <label>Sucursal:</label>
-    <select id="invBranch" onchange="renderInv()"></select>
-    <span class="muted" id="invBranchInfo"></span>
-  </div>
+  <div class="branchbar"><label>Sucursal:</label><select id="invBranch" onchange="renderInv()"></select><span class="muted" id="invBranchInfo"></span></div>
   <div class="grid-main" style="grid-template-columns:1fr;">
     <div class="panel">
       <div class="ph">IMPORTAR INVENTARIO (CSV)</div>
-      <div class="pb">
-        <div class="csvbox">
-          <div class="drop">Sube un archivo <b>.csv</b> con el inventario de la sucursal seleccionada. El sistema
-            crea/actualiza el catálogo y <b>fija el stock inicial</b> de esa sucursal.</div>
-          <code class="fmt">sku,nombre,precio,costo_reposicion,stock_inicial,stock_minimo<br>CBL-USB-C,Cable USB-C,120,70,40,10</code>
-          <div style="display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap;">
-            <input type="file" id="csvFile" accept=".csv,text/csv">
-            <button class="btn primary" id="csvBtn" onclick="importarCSV()">⬆ Importar a la sucursal</button>
-            <button class="btn sm" onclick="descargarPlantilla()">Descargar plantilla CSV</button>
-          </div>
-          <div class="formmsg" id="csvMsg"></div>
+      <div class="pb"><div class="csvbox">
+        <div class="drop">Sube un <b>.csv</b> con el inventario de la sucursal. Crea/actualiza el catálogo, fija el stock y <b>asigna la gaveta</b> (columna <b>gaveta</b>, ej. <b>C2-S1-R5-P1</b>).</div>
+        <code class="fmt">sku,nombre,precio,costo_reposicion,stock_inicial,stock_minimo,gaveta<br>SKU-0001,Diodo 1N4001,3,3,50,5,C1-S1-R1-P1</code>
+        <div style="display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap;">
+          <input type="file" id="csvFile" accept=".csv,text/csv">
+          <button class="btn primary" id="csvBtn" onclick="importarCSV()">⬆ Importar a la sucursal</button>
+          <button class="btn sm" onclick="descargarPlantilla()">Descargar plantilla CSV</button>
         </div>
-      </div>
+        <div class="formmsg" id="csvMsg"></div>
+      </div></div>
     </div>
     <div class="panel">
       <div class="ph"><span>INVENTARIO DE LA SUCURSAL</span>
@@ -174,69 +164,51 @@
         </div>
       </div>
       <div class="pb" style="padding:0;"><div class="scroll" style="max-height:460px;">
-        <table><thead><tr>
-          <th>SKU</th><th>Producto</th><th class="num">Existencia</th><th class="num">Mínimo</th>
-          <th style="width:110px;">Nivel</th><th>Estado</th>
-        </tr></thead><tbody id="inv"></tbody></table>
+        <table><thead><tr><th>SKU</th><th>Producto</th><th class="num">Existencia</th><th class="num">Mínimo</th><th style="width:110px;">Nivel</th><th>Estado</th></tr></thead>
+        <tbody id="inv"></tbody></table>
       </div></div>
-      <div class="pb muted">Rojo = por debajo del mínimo · Ámbar = a 20% o menos del mínimo. El <b>stock mínimo</b> es configurable aquí. Con <b>Reabastecer</b> puede sumar piezas a varios ítems a la vez.</div>
+      <div class="pb muted">Rojo = por debajo del mínimo · Ámbar = a 20% o menos del mínimo. <b>Reabastecer</b> suma piezas a varios ítems a la vez.</div>
     </div>
   </div>
 </div>
-<!-- ===================== ARQUEO ===================== -->
+<!-- ARQUEO -->
 <div class="view" id="v-arq">
-  <div class="branchbar">
-    <label>Sucursal:</label>
-    <select id="arqBranch" onchange="loadArqueo()"></select>
+  <div class="branchbar"><label>Sucursal:</label><select id="arqBranch" onchange="loadArqueo()"></select>
     <label style="margin-left:10px;"><input type="checkbox" id="arqSoloMov" onchange="renderArqueo()"> Solo ítems con ventas de hoy</label>
-    <button class="btn sm" onclick="loadArqueo()">↻ Recargar</button>
-  </div>
+    <button class="btn sm" onclick="loadArqueo()">↻ Recargar</button></div>
   <div class="grid-main" style="grid-template-columns:1fr;">
     <div class="panel">
-      <div class="ph"><span>CONTEO FÍSICO (ARQUEO RÁPIDO)</span>
-        <button class="btn green" id="arqApplyBtn" onclick="aplicarArqueo()">✔ Aplicar arqueo</button>
-      </div>
-      <div class="pb muted">Escribe solo el <b>conteo físico</b> de lo que cuentes. Lo que dejes vacío no se toca.
-        El sistema calcula la diferencia y valora el faltante a precio de reposición (garantía).</div>
+      <div class="ph"><span>CONTEO FÍSICO (ARQUEO RÁPIDO)</span><button class="btn green" id="arqApplyBtn" onclick="aplicarArqueo()">✔ Aplicar arqueo</button></div>
+      <div class="pb muted">Escribe solo el <b>conteo físico</b>. Lo vacío no se toca. El sistema calcula la diferencia y valora el faltante a precio de reposición.</div>
       <div class="pb" style="padding:0;"><div class="scroll" style="max-height:460px;">
-        <table><thead><tr>
-          <th>SKU</th><th>Producto</th><th class="num">Sistema</th><th class="num">Conteo físico</th>
-          <th class="num">Diferencia</th><th class="num">Faltante $</th>
-        </tr></thead><tbody id="arq"></tbody></table>
+        <table><thead><tr><th>SKU</th><th>Producto</th><th class="num">Sistema</th><th class="num">Conteo físico</th><th class="num">Diferencia</th><th class="num">Faltante $</th></tr></thead>
+        <tbody id="arq"></tbody></table>
       </div></div>
-      <div class="arqsum">
-        <div>Ítems a ajustar: <b id="arqCount">0</b></div>
-        <div>Faltante total (unid.): <b id="arqUnits" class="neg">0</b></div>
-        <div>Valor del faltante: <b id="arqValue" class="neg">$0</b></div>
-      </div>
+      <div class="arqsum"><div>Ítems a ajustar: <b id="arqCount">0</b></div><div>Faltante (unid.): <b id="arqUnits" class="neg">0</b></div><div>Valor del faltante: <b id="arqValue" class="neg">$0</b></div></div>
       <div class="pb"><div class="formmsg" id="arqMsg"></div></div>
     </div>
   </div>
 </div>
-<!-- ===================== SUCURSALES ===================== -->
+<!-- SUCURSALES -->
 <div class="view" id="v-suc">
   <div class="grid-main" style="grid-template-columns:1fr;">
     <div class="panel">
       <div class="ph">ALTA DE SUCURSAL / PUNTO DE VENTA</div>
-      <div class="pb">
-        <div class="form-grid">
-          <div class="fg"><label>Nombre de la sucursal</label><input id="s_suc" placeholder="Ej. Local Centro"></div>
-          <div class="fg"><label>Nombre del encargado</label><input id="s_enc" placeholder="Ej. Juan Pérez"></div>
-          <div class="fg"><label>Teléfono / contacto</label><input id="s_tel" placeholder="Ej. 443 000 0000"></div>
-          <div class="fg"><label>Correo (para iniciar sesión)</label><input id="s_email" type="email" placeholder="correo@ejemplo.com"></div>
-          <div class="fg"><label>Contraseña</label><input id="s_pass" placeholder="Contraseña del punto de venta"></div>
-          <div class="fg"><label>Comisión (%)</label><input id="s_com" type="number" min="0" step="0.1" placeholder="10"></div>
-          <div class="fg full"><button class="btn primary" id="addSucBtn" onclick="altaSucursal()">＋ Crear sucursal</button>
-            <div class="formmsg" id="sucMsg"></div></div>
-        </div>
-      </div>
+      <div class="pb"><div class="form-grid">
+        <div class="fg"><label>Nombre de la sucursal</label><input id="s_suc" placeholder="Ej. Local Centro"></div>
+        <div class="fg"><label>Nombre del encargado</label><input id="s_enc" placeholder="Ej. Juan Pérez"></div>
+        <div class="fg"><label>Teléfono / contacto</label><input id="s_tel" placeholder="Ej. 443 000 0000"></div>
+        <div class="fg"><label>Correo (para iniciar sesión)</label><input id="s_email" type="email" placeholder="correo@ejemplo.com"></div>
+        <div class="fg"><label>Contraseña</label><input id="s_pass" placeholder="Contraseña del punto de venta"></div>
+        <div class="fg"><label>Comisión (%)</label><input id="s_com" type="number" min="0" step="0.1" placeholder="10"></div>
+        <div class="fg full"><button class="btn primary" id="addSucBtn" onclick="altaSucursal()">＋ Crear sucursal</button><div class="formmsg" id="sucMsg"></div></div>
+      </div></div>
     </div>
     <div class="panel">
       <div class="ph"><span>SUCURSALES REGISTRADAS</span><span class="muted" id="sucCount">0</span></div>
       <div class="pb" style="padding:0;"><div class="scroll">
-        <table><thead><tr>
-          <th>ID</th><th>Sucursal</th><th>Encargado</th><th>Teléfono</th><th>Correo</th><th class="num">Comisión</th>
-        </tr></thead><tbody id="sucList"></tbody></table>
+        <table><thead><tr><th>ID</th><th>Sucursal</th><th>Encargado</th><th>Teléfono</th><th>Correo</th><th class="num">Comisión</th></tr></thead>
+        <tbody id="sucList"></tbody></table>
       </div></div>
     </div>
   </div>
@@ -255,8 +227,7 @@ function estadoCls(e){ return e==='NORMAL'?'norm':(e==='CERCA_MINIMO'?'warn':'al
 function switchTab(v){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.v===v));
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-  document.getElementById('v-'+v).classList.add('active');
-  if(v==='arq') loadArqueo();
+  document.getElementById('v-'+v).classList.add('active'); if(v==='arq') loadArqueo();
 }
 function goInv(){ switchTab('inv'); document.getElementById('inv').scrollIntoView({behavior:'smooth',block:'center'}); }
 async function loadAll(){
@@ -268,21 +239,16 @@ async function loadAll(){
     sb.from('ventas').select('*').order('created_at',{ascending:false}).limit(40)
   ]);
   CATALOG=cat||[]; LOCALES=locs||[]; INV_ALL=invAll||[]; TODAY=today||[]; FEED=feed||[];
-  setLive(true);
-  fillBranchSelectors();
-  renderMon(); renderInv(); renderSuc(); renderBell();
+  setLive(true); fillBranchSelectors(); renderMon(); renderInv(); renderSuc(); renderBell();
 }
 function setLive(on){ document.getElementById('liveDot').classList.toggle('on',on);
   document.getElementById('liveTxt').textContent = on?'En línea · tiempo real':'Sin conexión'; }
 function fillBranchSelectors(){
   const opts = LOCALES.map(l=>`<option value="${esc(l.id)}">${esc(l.nombre_sucursal)} (${esc(l.id)})</option>`).join('');
-  ['invBranch','arqBranch'].forEach(id=>{
-    const s=document.getElementById(id); const prev=s.value;
+  ['invBranch','arqBranch'].forEach(id=>{ const s=document.getElementById(id); const prev=s.value;
     s.innerHTML = opts || '<option value="">— sin sucursales —</option>';
-    if(prev && LOCALES.some(l=>l.id===prev)) s.value=prev;
-  });
+    if(prev && LOCALES.some(l=>l.id===prev)) s.value=prev; });
 }
-/* ---------- Monitoreo (con ganancia Resi) ---------- */
 function renderMon(){
   document.getElementById('kVentas').textContent = TODAY.length;
   document.getElementById('kImporte').textContent = money(TODAY.reduce((a,s)=>a+Number(s.total),0));
@@ -293,8 +259,7 @@ function renderMon(){
   document.getElementById('kpiAlarm').classList.toggle('alarm', bajo.length>0);
   const banner=document.getElementById('alarmBanner');
   if(bajo.length>0){ banner.classList.add('show');
-    document.getElementById('alarmBannerTxt').textContent =
-      bajo.length+(bajo.length===1?' alerta de inventario: ':' alertas de inventario: ')+
+    document.getElementById('alarmBannerTxt').textContent = bajo.length+(bajo.length===1?' alerta de inventario: ':' alertas de inventario: ')+
       bajo.slice(0,6).map(p=>`${p.nombre}@${p.nombre_sucursal}`).join(', ')+(bajo.length>6?'…':'');
   } else banner.classList.remove('show');
   const nameOf = id => (LOCALES.find(l=>l.id===id)||{}).nombre_sucursal || id;
@@ -311,7 +276,6 @@ function renderMon(){
     <td>${esc(nameOf(s.local_id))}</td><td>${esc(s.nombre)}</td><td class="num">${s.cantidad}</td><td class="num">${money(s.total)}</td></tr>`).join('')
     : '<tr><td colspan="5" class="empty">Sin movimientos.</td></tr>';
 }
-/* ---------- Inventario ---------- */
 function currentBranch(){ return document.getElementById('invBranch').value; }
 function invOf(branch){ return INV_ALL.filter(r=>r.local_id===branch); }
 function renderInv(){
@@ -327,97 +291,63 @@ function renderInv(){
     const rowcls = cls==='alarm'?'row-alarm':(cls==='warn'?'row-warn':'');
     const tag = cls==='alarm'?'<span class="tag alarm">'+(p.stock<=0?'AGOTADO':'BAJO MÍNIMO')+'</span>'
               : cls==='warn'?'<span class="tag warn">CERCA DEL MÍNIMO</span>':'<span class="tag norm">NORMAL</span>';
-    const exCell = editing
-      ? `<input class="minedit" type="number" min="0" value="${p.stock}" data-sku="${esc(p.sku)}" data-f="stock">`
-      : (restocking
-          ? `<b>${p.stock}</b><input class="addqty" type="number" min="0" placeholder="+0" data-sku="${esc(p.sku)}">`
-          : `<b>${p.stock}</b>`);
+    const exCell = editing ? `<input class="minedit" type="number" min="0" value="${p.stock}" data-sku="${esc(p.sku)}" data-f="stock">`
+      : (restocking ? `<b>${p.stock}</b><input class="addqty" type="number" min="0" placeholder="+0" data-sku="${esc(p.sku)}">` : `<b>${p.stock}</b>`);
     const minCell= editing? `<input class="minedit" type="number" min="0" value="${p.stock_min}" data-sku="${esc(p.sku)}" data-f="stock_min">` : p.stock_min;
-    return `<tr class="${rowcls}"><td>${esc(p.sku)}</td><td>${esc(p.nombre)}</td>
-      <td class="num">${exCell}</td><td class="num">${minCell}</td>
-      <td><div class="barwrap"><div class="bar ${cls==='norm'?'':cls}" style="width:${pct}%"></div></div></td>
-      <td>${tag}</td></tr>`;
+    return `<tr class="${rowcls}"><td>${esc(p.sku)}</td><td>${esc(p.nombre)}</td><td class="num">${exCell}</td><td class="num">${minCell}</td>
+      <td><div class="barwrap"><div class="bar ${cls==='norm'?'':cls}" style="width:${pct}%"></div></div></td><td>${tag}</td></tr>`;
   }).join('');
 }
 function toggleEdit(){
   editing=!editing;
-  if(editing){ restocking=false;
-    document.getElementById('restockApplyBtn').style.display='none';
-    document.getElementById('restockBtn').textContent='Reabastecer';
-    document.getElementById('restockMsg').textContent='';
-  }
+  if(editing){ restocking=false; document.getElementById('restockApplyBtn').style.display='none';
+    document.getElementById('restockBtn').textContent='Reabastecer'; document.getElementById('restockMsg').textContent=''; }
   document.getElementById('saveBtn').style.display=editing?'inline-block':'none';
-  document.getElementById('editBtn').textContent=editing?'Cancelar':'Editar stock / mínimos';
-  renderInv();
+  document.getElementById('editBtn').textContent=editing?'Cancelar':'Editar stock / mínimos'; renderInv();
 }
 async function saveEdits(){
   const b=currentBranch(); const changes={};
-  document.querySelectorAll('.minedit').forEach(inp=>{
-    const sku=inp.dataset.sku, f=inp.dataset.f, v=Math.max(0,parseInt(inp.value||'0',10));
-    if(!changes[sku]) changes[sku]={}; changes[sku][f]=v;
-  });
+  document.querySelectorAll('.minedit').forEach(inp=>{ const sku=inp.dataset.sku, f=inp.dataset.f, v=Math.max(0,parseInt(inp.value||'0',10));
+    if(!changes[sku]) changes[sku]={}; changes[sku][f]=v; });
   await Promise.all(Object.entries(changes).map(([sku,fields])=> sb.from('inventario').update(fields).eq('local_id',b).eq('sku',sku)));
-  editing=false; document.getElementById('saveBtn').style.display='none';
-  document.getElementById('editBtn').textContent='Editar stock / mínimos';
-  await loadAll();
+  editing=false; document.getElementById('saveBtn').style.display='none'; document.getElementById('editBtn').textContent='Editar stock / mínimos'; await loadAll();
 }
-/* ---------- Reabastecer (doble confirmacion) ---------- */
 function toggleRestock(){
   restocking=!restocking;
-  if(restocking){ editing=false;
-    document.getElementById('saveBtn').style.display='none';
-    document.getElementById('editBtn').textContent='Editar stock / mínimos';
-  }
+  if(restocking){ editing=false; document.getElementById('saveBtn').style.display='none'; document.getElementById('editBtn').textContent='Editar stock / mínimos'; }
   document.getElementById('restockApplyBtn').style.display=restocking?'inline-block':'none';
   document.getElementById('restockBtn').textContent=restocking?'Cancelar reabasto':'Reabastecer';
-  document.getElementById('restockMsg').textContent='';
-  renderInv();
+  document.getElementById('restockMsg').textContent=''; renderInv();
 }
 async function aplicarReabasto(){
   const b=currentBranch(); const msg=document.getElementById('restockMsg'); msg.className='formmsg'; msg.style.marginTop='0';
   if(!b){ msg.textContent='Seleccione una sucursal.'; msg.classList.add('err'); return; }
-  const jobs=[];
-  document.querySelectorAll('#inv .addqty').forEach(inp=>{
-    const c=parseInt(inp.value||'0',10)||0; if(c>0) jobs.push({ sku:inp.dataset.sku, cant:c });
-  });
+  const jobs=[]; document.querySelectorAll('#inv .addqty').forEach(inp=>{ const c=parseInt(inp.value||'0',10)||0; if(c>0) jobs.push({ sku:inp.dataset.sku, cant:c }); });
   if(jobs.length===0){ msg.textContent='Ingrese piezas a agregar en al menos un ítem.'; msg.classList.add('err'); return; }
   if(!confirm(`¿Aplicar reabastecimiento a ${jobs.length} ítem(s)?`)) return;
-  if(!confirm('¿Está seguro? Se sumarán las piezas al inventario de la sucursal. Esta acción no se puede deshacer.')) return;
+  if(!confirm('¿Está seguro? Se sumarán las piezas al inventario. No se puede deshacer.')) return;
   const btn=document.getElementById('restockApplyBtn'); btn.disabled=true; msg.textContent='Aplicando…'; msg.className='formmsg'; msg.style.marginTop='0';
-  const res=await Promise.all(jobs.map(j=> sb.rpc('fn_reabastecer',{ p_local:b, p_sku:j.sku, p_cant:j.cant })));
-  btn.disabled=false;
-  const err=res.find(r=>r.error);
-  if(err){ msg.textContent='Error: '+err.error.message; msg.classList.add('err'); return; }
-  restocking=false;
-  document.getElementById('restockApplyBtn').style.display='none';
-  document.getElementById('restockBtn').textContent='Reabastecer';
-  msg.textContent=`✔ Reabastecimiento aplicado a ${jobs.length} ítem(s).`; msg.classList.add('ok');
-  await loadAll();
+  const res=await Promise.all(jobs.map(j=> sb.rpc('fn_reabastecer',{ p_local:b, p_sku:j.sku, p_cant:j.cant }))); btn.disabled=false;
+  const err=res.find(r=>r.error); if(err){ msg.textContent='Error: '+err.error.message; msg.classList.add('err'); return; }
+  restocking=false; document.getElementById('restockApplyBtn').style.display='none'; document.getElementById('restockBtn').textContent='Reabastecer';
+  msg.textContent=`✔ Reabastecimiento aplicado a ${jobs.length} ítem(s).`; msg.classList.add('ok'); await loadAll();
 }
-/* ---------- CSV ---------- */
 function descargarPlantilla(){
-  const txt='sku,nombre,precio,costo_reposicion,stock_inicial,stock_minimo\nCBL-USB-C,Cable USB-C,120,70,40,10\n';
+  const txt='sku,nombre,precio,costo_reposicion,stock_inicial,stock_minimo,gaveta\nSKU-0001,Diodo 1N4001,3,3,50,5,C1-S1-R1-P1\n';
   const blob=new Blob(['\uFEFF'+txt],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='plantilla_inventario.csv'; a.click();
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='plantilla_inventario.csv'; a.click();
 }
-async function readFileSmart(file){
-  const buf = await file.arrayBuffer();
-  try{ return new TextDecoder('utf-8', { fatal:true }).decode(buf); }
-  catch(e){ return new TextDecoder('windows-1252').decode(buf); }
-}
+async function readFileSmart(file){ const buf=await file.arrayBuffer();
+  try{ return new TextDecoder('utf-8',{fatal:true}).decode(buf); }catch(e){ return new TextDecoder('windows-1252').decode(buf); } }
 function parseCSV(text){
   const lines=text.replace(/\r/g,'').split('\n').filter(l=>l.trim()!=='');
   if(lines.length<2) return [];
-  const head=lines[0].split(',').map(h=>h.trim().toLowerCase());
-  const idx=n=>head.indexOf(n);
-  const iSku=idx('sku'), iNom=idx('nombre'), iPre=idx('precio'), iCos=idx('costo_reposicion'), iStk=idx('stock_inicial'), iMin=idx('stock_minimo');
+  const head=lines[0].split(',').map(h=>h.trim().toLowerCase()); const idx=n=>head.indexOf(n);
+  const iSku=idx('sku'), iNom=idx('nombre'), iPre=idx('precio'), iCos=idx('costo_reposicion'), iStk=idx('stock_inicial'), iMin=idx('stock_minimo'), iGav=idx('gaveta');
   const out=[];
-  for(let k=1;k<lines.length;k++){
-    const c=lines[k].split(','); const sku=(c[iSku]||'').trim(); if(!sku) continue;
+  for(let k=1;k<lines.length;k++){ const c=lines[k].split(','); const sku=(c[iSku]||'').trim(); if(!sku) continue;
     out.push({ sku, nombre:(c[iNom]||'').trim()||sku, precio:parseFloat(c[iPre]||'0')||0, costo_repos:parseFloat(c[iCos]||'0')||0,
-      stock:parseInt(c[iStk]||'0',10)||0, stock_min:parseInt(c[iMin]||'5',10)||5 });
-  }
+      stock:parseInt(c[iStk]||'0',10)||0, stock_min:parseInt(c[iMin]||'5',10)||5, gaveta:(iGav>=0?(c[iGav]||'').trim():'') }); }
   return out;
 }
 async function importarCSV(){
@@ -429,20 +359,19 @@ async function importarCSV(){
   try{
     const rows=parseCSV(await readFileSmart(file));
     if(rows.length===0){ msg.textContent='El CSV no tiene filas válidas (revise encabezados).'; msg.classList.add('err'); return; }
-    const cat=rows.map(r=>({sku:r.sku,nombre:r.nombre,precio:r.precio,costo_repos:r.costo_repos}));
+    const cat=rows.map(r=>({sku:r.sku,nombre:r.nombre,precio:r.precio,costo_repos:r.costo_repos,gaveta_id:(r.gaveta||null)}));
     const { error:e1 } = await sb.from('productos').upsert(cat,{onConflict:'sku'});
-    if(e1){ msg.textContent='Error catálogo: '+e1.message; msg.classList.add('err'); return; }
+    if(e1){ msg.textContent = /gavetas|foreign key|violates/i.test(e1.message)
+        ? 'Error: alguna gaveta del CSV no existe (revise el código, ej. C2-S1-R5-P1).' : ('Error catálogo: '+e1.message); msg.classList.add('err'); return; }
     const inv=rows.map(r=>({local_id:b,sku:r.sku,stock:r.stock,stock_min:r.stock_min}));
     const { error:e2 } = await sb.from('inventario').upsert(inv,{onConflict:'local_id,sku'});
     if(e2){ msg.textContent='Error inventario: '+e2.message; msg.classList.add('err'); return; }
-    msg.textContent=`✔ Importados ${rows.length} productos a la sucursal.`; msg.classList.add('ok');
+    const conGav=rows.filter(r=>r.gaveta).length;
+    msg.textContent=`✔ Importados ${rows.length} productos a la sucursal`+(conGav?` · ${conGav} con gaveta asignada`:'')+'.'; msg.classList.add('ok');
     document.getElementById('csvFile').value=''; await loadAll();
-  } catch(err){ msg.textContent='Error al leer el archivo: '+err.message; msg.classList.add('err'); }
-  finally { btn.disabled=false; }
+  } catch(err){ msg.textContent='Error al leer el archivo: '+err.message; msg.classList.add('err'); } finally { btn.disabled=false; }
 }
-/* ---------- Arqueo ---------- */
-function loadArqueo(){ const b=document.getElementById('arqBranch').value;
-  ARQROWS = invOf(b).slice().sort((a,c)=>a.nombre.localeCompare(c.nombre)); renderArqueo(); }
+function loadArqueo(){ const b=document.getElementById('arqBranch').value; ARQROWS = invOf(b).slice().sort((a,c)=>a.nombre.localeCompare(c.nombre)); renderArqueo(); }
 function movedTodaySkus(branch){ return new Set(TODAY.filter(s=>s.local_id===branch).map(s=>s.sku)); }
 function renderArqueo(){
   const b=document.getElementById('arqBranch').value;
@@ -451,11 +380,10 @@ function renderArqueo(){
   const tb=document.getElementById('arq');
   if(!b){ tb.innerHTML='<tr><td colspan="6" class="empty">Seleccione una sucursal.</td></tr>'; sumArqueo(); return; }
   if(list.length===0){ tb.innerHTML='<tr><td colspan="6" class="empty">Sin ítems para arquear.</td></tr>'; sumArqueo(); return; }
-  tb.innerHTML = list.map(p=>`
-    <tr data-sku="${esc(p.sku)}" data-sys="${p.stock}" data-costo="${p.costo_repos}">
-      <td>${esc(p.sku)}</td><td>${esc(p.nombre)}</td><td class="num">${p.stock}</td>
-      <td class="num"><input class="cnt" type="number" min="0" step="1" placeholder="—" oninput="onCount(this)"></td>
-      <td class="num diff">—</td><td class="num falt">—</td></tr>`).join('');
+  tb.innerHTML = list.map(p=>`<tr data-sku="${esc(p.sku)}" data-sys="${p.stock}" data-costo="${p.costo_repos}">
+    <td>${esc(p.sku)}</td><td>${esc(p.nombre)}</td><td class="num">${p.stock}</td>
+    <td class="num"><input class="cnt" type="number" min="0" step="1" placeholder="—" oninput="onCount(this)"></td>
+    <td class="num diff">—</td><td class="num falt">—</td></tr>`).join('');
   sumArqueo();
 }
 function onCount(inp){
@@ -464,37 +392,25 @@ function onCount(inp){
   if(val===''){ dCell.textContent='—'; dCell.className='num diff'; fCell.textContent='—'; fCell.className='num falt'; sumArqueo(); return; }
   const cnt=parseInt(val,10)||0; const diff=cnt-sys;
   dCell.textContent=(diff>0?'+':'')+diff; dCell.className='num diff '+(diff<0?'neg':(diff>0?'pos':''));
-  const falt = diff<0? Math.abs(diff)*costo : 0;
-  fCell.textContent = falt>0? money(falt):'—'; fCell.className='num falt '+(falt>0?'neg':''); sumArqueo();
+  const falt = diff<0? Math.abs(diff)*costo : 0; fCell.textContent = falt>0? money(falt):'—'; fCell.className='num falt '+(falt>0?'neg':''); sumArqueo();
 }
 function sumArqueo(){
   let n=0, units=0, value=0;
-  document.querySelectorAll('#arq tr').forEach(tr=>{
-    const inp=tr.querySelector('.cnt'); if(!inp) return; const val=inp.value.trim(); if(val==='') return;
-    const sys=+tr.dataset.sys, costo=+tr.dataset.costo; const diff=(parseInt(val,10)||0)-sys;
-    n++; if(diff<0){ units+=Math.abs(diff); value+=Math.abs(diff)*costo; }
-  });
-  document.getElementById('arqCount').textContent=n;
-  document.getElementById('arqUnits').textContent=units;
-  document.getElementById('arqValue').textContent=money(value);
+  document.querySelectorAll('#arq tr').forEach(tr=>{ const inp=tr.querySelector('.cnt'); if(!inp) return; const val=inp.value.trim(); if(val==='') return;
+    const sys=+tr.dataset.sys, costo=+tr.dataset.costo; const diff=(parseInt(val,10)||0)-sys; n++; if(diff<0){ units+=Math.abs(diff); value+=Math.abs(diff)*costo; } });
+  document.getElementById('arqCount').textContent=n; document.getElementById('arqUnits').textContent=units; document.getElementById('arqValue').textContent=money(value);
 }
 async function aplicarArqueo(){
   const b=document.getElementById('arqBranch').value; const msg=document.getElementById('arqMsg'); msg.className='formmsg';
   if(!b){ msg.textContent='Seleccione una sucursal.'; msg.classList.add('err'); return; }
-  const jobs=[];
-  document.querySelectorAll('#arq tr').forEach(tr=>{ const inp=tr.querySelector('.cnt'); if(!inp) return;
-    const val=inp.value.trim(); if(val==='') return; jobs.push({ sku:tr.dataset.sku, conteo:parseInt(val,10)||0 }); });
+  const jobs=[]; document.querySelectorAll('#arq tr').forEach(tr=>{ const inp=tr.querySelector('.cnt'); if(!inp) return; const val=inp.value.trim(); if(val==='') return; jobs.push({ sku:tr.dataset.sku, conteo:parseInt(val,10)||0 }); });
   if(jobs.length===0){ msg.textContent='No hay conteos capturados.'; msg.classList.add('err'); return; }
   if(!confirm(`Aplicar arqueo a ${jobs.length} ítem(s)? Se ajustará el stock y se registrarán los faltantes.`)) return;
   const btn=document.getElementById('arqApplyBtn'); btn.disabled=true; msg.textContent='Aplicando…';
-  const res=await Promise.all(jobs.map(j=> sb.rpc('fn_arqueo_aplicar',{p_local:b,p_sku:j.sku,p_conteo:j.conteo})));
-  btn.disabled=false;
-  const err=res.find(r=>r.error);
-  if(err){ msg.textContent='Error: '+err.error.message; msg.classList.add('err'); return; }
-  msg.textContent=`✔ Arqueo aplicado a ${jobs.length} ítem(s). Stock ajustado y faltantes registrados.`; msg.classList.add('ok');
-  await loadAll(); loadArqueo();
+  const res=await Promise.all(jobs.map(j=> sb.rpc('fn_arqueo_aplicar',{p_local:b,p_sku:j.sku,p_conteo:j.conteo}))); btn.disabled=false;
+  const err=res.find(r=>r.error); if(err){ msg.textContent='Error: '+err.error.message; msg.classList.add('err'); return; }
+  msg.textContent=`✔ Arqueo aplicado a ${jobs.length} ítem(s). Stock ajustado y faltantes registrados.`; msg.classList.add('ok'); await loadAll(); loadArqueo();
 }
-/* ---------- Sucursales ---------- */
 function renderSuc(){
   document.getElementById('sucCount').textContent = LOCALES.length+' sucursal(es)';
   document.getElementById('sucList').innerHTML = LOCALES.length? LOCALES.map(l=>`<tr><td>${esc(l.id)}</td>
@@ -507,25 +423,20 @@ async function altaSucursal(){
   const msg=document.getElementById('sucMsg'); msg.className='formmsg';
   if(!suc||!enc||!email||!pass){ msg.textContent='Sucursal, encargado, correo y contraseña son obligatorios.'; msg.classList.add('err'); return; }
   const btn=document.getElementById('addSucBtn'); btn.disabled=true;
-  const { data, error } = await sb.rpc('fn_crear_local', { p_sucursal:suc, p_encargado:enc, p_telefono:v('s_tel'), p_email:email, p_password:pass, p_comision:num('s_com')||10 });
-  btn.disabled=false;
+  const { data, error } = await sb.rpc('fn_crear_local', { p_sucursal:suc, p_encargado:enc, p_telefono:v('s_tel'), p_email:email, p_password:pass, p_comision:num('s_com')||10 }); btn.disabled=false;
   if(error){ msg.textContent=/duplicate|unique/i.test(error.message)?'Ese correo ya está registrado.':('Error: '+error.message); msg.classList.add('err'); return; }
   msg.textContent='✔ Sucursal creada con ID '+data+'.'; msg.classList.add('ok');
-  ['s_suc','s_enc','s_tel','s_email','s_pass','s_com'].forEach(id=>document.getElementById(id).value='');
-  await loadAll();
+  ['s_suc','s_enc','s_tel','s_email','s_pass','s_com'].forEach(id=>document.getElementById(id).value=''); await loadAll();
 }
-/* ---------- Campanita ---------- */
 function renderBell(){
   const bajo=INV_ALL.filter(p=>p.estado==='BAJO_MINIMO'||p.estado==='AGOTADO');
   const agot=INV_ALL.filter(p=>p.estado==='AGOTADO');
-  const bell=document.getElementById('bell'), bb=document.getElementById('bellBadge');
-  bell.classList.remove('warn','alarm');
+  const bell=document.getElementById('bell'), bb=document.getElementById('bellBadge'); bell.classList.remove('warn','alarm');
   if(agot.length>0) bell.classList.add('alarm'); else if(bajo.length>0) bell.classList.add('warn');
   if(bajo.length>0){ bb.style.display='flex'; bb.textContent=bajo.length; } else bb.style.display='none';
 }
 function v(id){ return document.getElementById(id).value.trim(); }
 function num(id){ return parseFloat(document.getElementById(id).value||'0')||0; }
-function int(id){ return parseInt(document.getElementById(id).value||'0',10)||0; }
 function tickClock(){ document.getElementById('clock').textContent =
   new Date().toLocaleString('es-MX',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
 setInterval(tickClock,1000); tickClock();

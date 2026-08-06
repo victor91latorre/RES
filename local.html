@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Punto de Venta</title>
+<title>Punto de Venta · Resi-Store</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin:0; padding:0; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
@@ -11,7 +11,8 @@
   .wrap { max-width:540px; margin:0 auto; padding:14px; }
   #login{ min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; }
   .card{ background:#E8E9EA; border:1px solid #9AA0A6; border-radius:10px; width:100%; max-width:420px;
-    padding:28px 22px; box-shadow:0 2px 6px rgba(0,0,0,.35); }
+    padding:24px 22px; box-shadow:0 2px 6px rgba(0,0,0,.35); }
+  .card .loginlogo{ display:block; max-width:220px; height:auto; margin:0 auto 14px; }
   h1{ font-size:22px; margin:0 0 4px; text-align:center; color:#202124; }
   .sub{ text-align:center; color:#5f6368; font-size:13px; margin-bottom:22px; }
   label{ display:block; font-size:15px; font-weight:600; margin:14px 0 6px; color:#202124; }
@@ -26,8 +27,9 @@
   .hint{ font-size:12px; color:#5f6368; margin-top:10px; line-height:1.4; text-align:center; }
   #app{ display:none; }
   .topbar{ background:#2b2f33; color:#fff; display:flex; align-items:center; justify-content:space-between;
-    padding:12px 14px; position:sticky; top:0; z-index:20; }
+    padding:10px 14px; position:sticky; top:0; z-index:20; }
   .topbar .who{ font-size:13px; line-height:1.2; } .topbar .who b{ font-size:16px; }
+  .topbar .brand{ height:52px; width:auto; display:block; }
   .top-actions{ display:flex; align-items:center; gap:10px; }
   .logout{ background:#565b60; color:#fff; border:none; padding:9px 14px; border-radius:7px; font-size:14px; }
   .bell{ position:relative; background:#565b60; border:none; width:46px; height:46px; border-radius:9px; cursor:pointer;
@@ -38,7 +40,7 @@
   @keyframes pulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(192,57,43,.6);} 50%{ box-shadow:0 0 0 8px rgba(192,57,43,0);} }
   .badge{ position:absolute; top:-6px; right:-6px; background:#fff; color:#C0392B; font-size:11px; font-weight:800;
     min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
-  #alarmPanel{ display:none; position:fixed; top:64px; right:10px; left:10px; max-width:520px; margin:0 auto;
+  #alarmPanel{ display:none; position:fixed; top:70px; right:10px; left:10px; max-width:520px; margin:0 auto;
     background:#fff; border:1px solid #9AA0A6; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,.4); z-index:30; }
   #alarmPanel.show{ display:block; }
   #alarmPanel .ah{ background:#2b2f33; color:#fff; padding:10px 14px; border-radius:10px 10px 0 0; font-weight:600;
@@ -95,7 +97,7 @@
   .result .change{ font-size:44px; font-weight:800; margin:6px 0; } .ok{ color:#2E7D46; } .short{ color:#B00020; }
   .toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#2E7D46; color:#fff;
     padding:14px 22px; border-radius:30px; font-size:16px; font-weight:600; box-shadow:0 3px 10px rgba(0,0,0,.4);
-    opacity:0; transition:opacity .25s; pointer-events:none; z-index:60; }
+    opacity:0; transition:opacity .25s; pointer-events:none; z-index:90; }
   .toast.show{ opacity:1; } .toast.err{ background:#C0392B; }
   .today{ display:flex; justify-content:space-between; align-items:center; font-size:16px; padding:7px 2px; border-bottom:1px solid #dfe1e3; }
   .today:last-child{ border-bottom:none; } .today b{ font-size:22px; }
@@ -104,7 +106,7 @@
   .hist{ border:1px solid #cdd0d3; border-radius:8px; padding:10px 12px; margin-bottom:8px; background:#fff; }
   .hist .hp{ font-weight:700; font-size:14px; margin-bottom:4px; } .hist .hp span{ font-weight:400; color:#5f6368; font-size:12px; }
   .hist .hr{ display:flex; justify-content:space-between; font-size:14px; padding:2px 0; }
-  #confirmOverlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:75; align-items:center; justify-content:center; padding:16px; }
+  #confirmOverlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:85; align-items:center; justify-content:center; padding:16px; }
   #confirmOverlay.show{ display:flex; }
   .confirm{ background:#fff; width:100%; max-width:380px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,.5); overflow:hidden; }
   .confirm .ch{ background:#2F6FB0; color:#fff; padding:14px 16px; text-align:center; }
@@ -116,33 +118,98 @@
   .confirm .cline2 .cn2{ font-weight:600; } .confirm .cline2 .cq2{ color:#5f6368; font-size:12px; }
   .confirm .ctot{ border-top:1px dashed #cdd0d3; margin-top:6px; padding-top:8px; }
   .confirm .ctot .crow b{ font-size:22px; }
-  .confirm .cgood{ color:#2E7D46; } .confirm .cbad{ color:#B00020; }
+  .confirm .cgood{ color:#2E7D46; }
   .confirm .cbtns{ display:grid; grid-template-columns:1fr 1fr; gap:0; }
   .confirm .cbtns button{ border:none; font-size:18px; font-weight:700; padding:16px; cursor:pointer; }
   .confirm .ccancel{ background:#E8E9EA; color:#B00020; }
   .confirm .cok{ background:#2E7D46; color:#fff; }
-  #ticketOverlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:80; align-items:center; justify-content:center; padding:16px; }
+  #ticketOverlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:95; align-items:center; justify-content:center; padding:16px; }
   #ticketOverlay.show{ display:flex; }
-  .ticket{ background:#fff; width:100%; max-width:360px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,.5); overflow:hidden; }
+  .ticket{ background:#fff; width:100%; max-width:360px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,.5); overflow:hidden; max-height:92vh; overflow-y:auto; }
   .ticket .th{ background:#2b2f33; color:#fff; padding:14px 16px; text-align:center; }
+  .ticket .th .tklogo{ height:48px; width:auto; display:block; margin:0 auto 6px; }
   .ticket .th b{ font-size:18px; } .ticket .th div{ font-size:12px; color:#c7cbcf; margin-top:2px; }
   .ticket .cap{ text-align:center; font-size:12px; color:#2E7D46; padding:8px 6px 0; font-weight:700; }
   .ticket .tb{ padding:14px 16px; font-size:14px; color:#1c1c1c; }
-  .ticket .titems{ max-height:220px; overflow:auto; margin-bottom:6px; }
+  .ticket .titems{ max-height:200px; overflow:auto; margin-bottom:6px; }
   .ticket .tline{ display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dotted #eceded; }
   .ticket .tline:last-child{ border-bottom:none; }
   .ticket .tline .tn{ font-weight:600; } .ticket .tline .tq{ font-size:11px; color:#5f6368; }
   .ticket .trow{ display:flex; justify-content:space-between; padding:4px 0; }
   .ticket .tot{ border-top:1px dashed #cdd0d3; margin-top:6px; padding-top:8px; }
   .ticket .tot .trow b{ font-size:20px; }
-  .ticket .foot2{ text-align:center; font-size:11px; color:#5f6368; padding:0 16px 12px; }
+  .ticket .foot2{ text-align:center; font-size:11px; color:#5f6368; padding:0 16px 8px; }
+  .ticket .promo{ margin:0 16px 12px; border:1.5px dashed #9AA0A6; border-radius:10px; padding:10px 12px; background:#F4F5F6; }
+  .ticket .promo .pt{ font-size:12px; font-weight:800; color:#2F6FB0; text-align:center; }
+  .ticket .promo .pd{ font-size:11px; color:#3d3f42; text-align:center; margin-top:3px; line-height:1.35; }
+  .ticket .promo .pph{ font-size:14px; font-weight:800; color:#2E7D46; text-align:center; margin-top:4px; }
   .ticket .tclose{ width:100%; border:none; background:#2F6FB0; color:#fff; font-size:18px; font-weight:700; padding:14px; cursor:pointer; }
+
+  /* =============== SURTIDO 3D (Localizador) =============== */
+  #surtidoOverlay{ display:none; position:fixed; inset:0; z-index:88; background:#4A4F54; overflow:hidden; }
+  #surtidoOverlay.show{ display:block; }
+  #s3canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; }
+  .s3top{ position:absolute; top:0; left:0; right:0; z-index:5; background:rgba(43,47,51,.92); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:space-between; padding:8px 14px; color:#EDEEEF; }
+  .s3top .brandbox{ display:flex; align-items:center; gap:10px; }
+  .s3top .s3logo{ height:40px; width:auto; }
+  .s3top .ttl small{ display:block; font-size:11px; color:#c7cbcf; }
+  .s3top .right{ display:flex; align-items:center; gap:10px; }
+  .s3top .prog{ font-size:13px; background:#2F6FB0; padding:6px 12px; border-radius:20px; font-weight:700; }
+  .s3top .prog.done{ background:#2E7D46; }
+  .s3top .close{ background:#565b60; color:#fff; border:none; padding:8px 12px; border-radius:8px; font-size:13px; cursor:pointer; }
+  .s3hint{ position:absolute; top:60px; left:50%; transform:translateX(-50%); z-index:4; background:rgba(0,0,0,.45);
+    color:#fff; font-size:11px; padding:5px 12px; border-radius:14px; pointer-events:none; }
+  .s3guide{ position:absolute; left:12px; bottom:12px; z-index:6; width:min(360px, calc(100% - 24px));
+    background:rgba(232,233,234,.97); color:#1c1c1c; border-radius:14px; box-shadow:0 6px 22px rgba(0,0,0,.45); overflow:hidden; }
+  .s3guide .gh{ background:#2b2f33; color:#fff; padding:9px 14px; font-size:12px; display:flex; justify-content:space-between; align-items:center; }
+  .s3guide .gh b{ font-size:13px; }
+  .s3guide .gb{ padding:14px; }
+  .s3guide .item{ font-size:20px; font-weight:800; line-height:1.15; }
+  .s3guide .sub{ font-size:12px; color:#5f6368; margin-top:2px; }
+  .qtytag{ display:inline-block; margin-top:8px; background:#2F6FB0; color:#fff; font-size:15px; font-weight:800; padding:5px 12px; border-radius:8px; }
+  .loc{ margin-top:12px; background:#FFF6D6; border:2px solid #E6B800; border-radius:10px; padding:12px; text-align:center; }
+  .loc .lbl{ font-size:11px; color:#7a5c00; letter-spacing:.6px; text-transform:uppercase; font-weight:700; }
+  .loc .val{ font-size:20px; font-weight:900; color:#3d2f00; margin-top:2px; }
+  .loc .val span{ color:#B26A00; }
+  .loc.none{ background:#F6D9D5; border-color:#C0392B; } .loc.none .lbl{ color:#7a1810; } .loc.none .val{ color:#4a0f08; font-size:15px; }
+  .s3btns{ display:grid; grid-template-columns:1fr 1.3fr; gap:8px; margin-top:14px; }
+  .s3btns button{ border:none; border-radius:10px; font-size:15px; font-weight:800; padding:13px 6px; cursor:pointer; color:#fff; }
+  .b-prev{ background:#6b7178; } .b-prev:active{ background:#565b60; } .b-prev:disabled{ opacity:.4; }
+  .b-done{ background:#2E7D46; } .b-done:active{ background:#245e34; }
+  .cartbtn{ position:absolute; right:12px; bottom:12px; z-index:7; background:#2b2f33; color:#fff; border:none;
+    border-radius:12px; padding:12px 14px; font-size:13px; font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,.4); cursor:pointer; }
+  .cartbtn .n{ background:#2F6FB0; border-radius:10px; padding:1px 7px; margin-left:6px; }
+  .s3list{ position:absolute; right:0; top:0; bottom:0; z-index:8; width:min(320px,86%); background:#E8E9EA; color:#1c1c1c;
+    transform:translateX(100%); transition:transform .25s; box-shadow:-6px 0 22px rgba(0,0,0,.4); display:flex; flex-direction:column; }
+  .s3list.open{ transform:translateX(0); }
+  .s3list .lh{ background:#2b2f33; color:#fff; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; }
+  .s3list .lh b{ font-size:15px; }
+  .s3list .lb{ overflow:auto; padding:8px; flex:1; }
+  .lrow{ display:flex; align-items:center; gap:10px; padding:11px 10px; border-radius:10px; margin-bottom:6px; background:#fff; border:1.5px solid #d7d9db; cursor:pointer; }
+  .lrow.active{ border-color:#2F6FB0; background:#DCE9F5; }
+  .lrow.done{ opacity:.7; }
+  .lrow .ck{ width:26px; height:26px; border-radius:50%; border:2px solid #9AA0A6; flex:none; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; }
+  .lrow.done .ck{ background:#2E7D46; border-color:#2E7D46; }
+  .lrow .info{ flex:1; min-width:0; }
+  .lrow .nm{ font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .lrow .lc{ font-size:11px; color:#5f6368; }
+  .lrow .qt{ font-size:13px; font-weight:800; color:#2F6FB0; flex:none; }
+  .s3list .lf{ padding:12px; border-top:1px solid #cdd0d3; }
+  .s3list .lf button{ width:100%; border:none; border-radius:10px; padding:13px; font-size:15px; font-weight:800; color:#fff; background:#2F6FB0; cursor:pointer; }
+  .doneOv{ position:absolute; inset:0; z-index:9; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:20px; }
+  .doneOv.show{ display:flex; }
+  .doneCard{ background:#fff; color:#1c1c1c; border-radius:16px; max-width:340px; width:100%; text-align:center; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.5); }
+  .doneCard .dh{ background:#2E7D46; color:#fff; padding:22px; font-size:44px; }
+  .doneCard .db{ padding:18px; } .doneCard .db b{ font-size:19px; } .doneCard .db p{ color:#5f6368; font-size:14px; margin:8px 0 0; }
+  .doneCard button{ margin:14px; width:calc(100% - 28px); border:none; border-radius:10px; padding:14px; font-size:15px; font-weight:800; color:#fff; background:#2F6FB0; cursor:pointer; }
 </style>
 </head>
 <body>
 <!-- ================= LOGIN ================= -->
 <div id="login">
   <div class="card">
+    <img class="loginlogo" src="logo.png" alt="Resi-Store">
     <h1>Punto de Venta</h1>
     <div class="sub">Ingrese con su correo y contraseña</div>
     <label for="email">Correo</label>
@@ -158,6 +225,7 @@
 <div id="app">
   <div class="topbar">
     <div class="who">Punto de venta<br><b id="whoName">—</b></div>
+    <img class="brand" src="logo.png" alt="Resi-Store">
     <div class="top-actions">
       <button class="bell" id="bell" onclick="toggleAlarms()" title="Alarmas de inventario">
         <svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-5v-1l-1.6-1.6V10a5.4 5.4 0 0 0-4-5.2V4a1.4 1.4 0 0 0-2.8 0v.8A5.4 5.4 0 0 0 6.6 10v4.4L5 16v1z"/></svg>
@@ -235,7 +303,7 @@
     </div>
   </div>
 </div>
-<!-- ================= CONFIRMACIÓN PREVIA (RESUMEN) ================= -->
+<!-- ================= CONFIRMACIÓN PREVIA ================= -->
 <div id="confirmOverlay">
   <div class="confirm">
     <div class="ch"><b>Confirme la venta</b><div>Revise que todo sea correcto antes de registrar</div></div>
@@ -253,10 +321,52 @@
     </div>
   </div>
 </div>
+<!-- ================= SURTIDO 3D (Localizador) ================= -->
+<div id="surtidoOverlay">
+  <canvas id="s3canvas"></canvas>
+  <div class="s3top">
+    <div class="brandbox"><img class="s3logo" src="logo.png" alt="Resi-Store">
+      <div class="ttl">Localizador de gavetas<small id="s3Suc">Punto de venta</small></div></div>
+    <div class="right">
+      <span class="prog" id="s3Prog">0 / 0</span>
+      <button class="close" onclick="terminarSurtido()">Terminar</button>
+    </div>
+  </div>
+  <div class="s3hint">Arrastre para girar · pellizque para acercar</div>
+  <div class="s3guide">
+    <div class="gh"><span id="s3Step">Gaveta 1 de 1</span><b id="s3Pct">0%</b></div>
+    <div class="gb">
+      <div class="item" id="s3Name">—</div>
+      <div class="sub" id="s3Sku">—</div>
+      <div><span class="qtytag" id="s3Qty">× 1</span></div>
+      <div class="loc" id="s3LocBox">
+        <div class="lbl">Ubicación de la gaveta</div>
+        <div class="val" id="s3Loc">— · — · —</div>
+      </div>
+      <div class="s3btns">
+        <button class="b-prev" id="s3Prev" onclick="surtidoPrev()">◀ Anterior</button>
+        <button class="b-done" id="s3Done" onclick="surtidoMarkDone()">✔ Surtido</button>
+      </div>
+    </div>
+  </div>
+  <button class="cartbtn" onclick="toggleS3List()">📋 Pedido <span class="n" id="s3CartN">0</span></button>
+  <div class="s3list" id="s3List">
+    <div class="lh"><b>Pedido a surtir</b><span style="cursor:pointer" onclick="toggleS3List()">✕</span></div>
+    <div class="lb" id="s3ListBody"></div>
+    <div class="lf"><button onclick="toggleS3List()">Cerrar</button></div>
+  </div>
+  <div class="doneOv" id="s3DoneOv">
+    <div class="doneCard">
+      <div class="dh">✅</div>
+      <div class="db"><b>¡Pedido surtido!</b><p>Todas las gavetas fueron atendidas.</p></div>
+      <button onclick="terminarSurtido()">Ver ticket</button>
+    </div>
+  </div>
+</div>
 <!-- ================= TICKET DIGITAL ================= -->
 <div id="ticketOverlay">
   <div class="ticket">
-    <div class="th"><b id="tkSuc">—</b><div id="tkFecha">—</div></div>
+    <div class="th"><img class="tklogo" src="logo.png" alt="Resi-Store"><b id="tkSuc">—</b><div id="tkFecha">—</div></div>
     <div class="cap">📸 Tome una foto de su ticket</div>
     <div class="tb">
       <div class="titems" id="tkItems"></div>
@@ -268,11 +378,18 @@
       <div class="trow" style="margin-top:8px;"><span>Folio</span><span id="tkFolio">—</span></div>
     </div>
     <div class="foot2">Gracias por su compra</div>
+    <div class="promo">
+      <div class="pt">RESI-STORE · Impresión 3D y fabricación de placas PCB</div>
+      <div class="pph">📞 443 502 5665</div>
+      <div class="pd">Lic. Mariano De Jesús Torres 343, Dr. Miguel Silva González, 58110 Morelia, Mich.</div>
+    </div>
     <button class="tclose" onclick="cerrarTicket()">Cerrar</button>
   </div>
 </div>
 <div class="toast" id="toast">Venta registrada ✔</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script src="config.js"></script>
 <script>
 const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
@@ -292,9 +409,7 @@ async function login(){
     const { data, error } = await sb.rpc('fn_login_local', { p_email:e, p_password:p });
     if(error){ err.textContent='Error de conexión. Intente de nuevo.'; console.error(error); return; }
     if(!data || data.length===0){ err.textContent='Correo o contraseña incorrectos.'; return; }
-    session = data[0];
-    localStorage.setItem('cv_session', JSON.stringify(session));
-    startApp();
+    session = data[0]; localStorage.setItem('cv_session', JSON.stringify(session)); startApp();
   } finally { btn.disabled=false; btn.textContent='ENTRAR'; }
 }
 function logout(){ localStorage.removeItem('cv_session'); location.reload(); }
@@ -303,16 +418,14 @@ async function startApp(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('whoName').textContent = session.nombre_sucursal + ' — ' + session.nombre_encargado;
-  renderCarrito();
-  await cargarResumen(); await updateBell();
+  renderCarrito(); await cargarResumen(); await updateBell();
   sb.channel('pos-rt-'+session.id)
     .on('postgres_changes', { event:'*', schema:'public', table:'inventario', filter:'local_id=eq.'+session.id },
         ()=>{ updateBell(); if(document.getElementById('results').style.display!=='none') runSearch(); })
     .subscribe();
-  setInterval(updateBell, 8000);
-  setInterval(cargarResumen, 20000);
+  setInterval(updateBell, 8000); setInterval(cargarResumen, 20000);
 }
-/* ---------- BUSCADOR (inventario de ESTA sucursal) ---------- */
+/* ---------- BUSCADOR ---------- */
 function doSearch(){ clearTimeout(searchTimer); searchTimer=setTimeout(runSearch,220); }
 async function runSearch(){
   const q=document.getElementById('search').value.trim();
@@ -320,7 +433,7 @@ async function runSearch(){
   if(!q){ box.style.display='none'; box.innerHTML=''; return; }
   const safe=q.replace(/[%,]/g,' ');
   const { data, error } = await sb.from('v_inventario')
-    .select('sku,nombre,precio,stock,stock_min,estado')
+    .select('sku,nombre,precio,stock,stock_min,estado,gaveta_id')
     .eq('local_id', session.id)
     .or(`nombre.ilike.%${safe}%,sku.ilike.%${safe}%`).limit(30);
   box.style.display='block';
@@ -345,8 +458,7 @@ function pick(sku){
   document.getElementById('selName').textContent=sel.nombre;
   document.getElementById('selSku').textContent=sel.sku;
   document.getElementById('selPrice').textContent='$'+sel.precio;
-  document.getElementById('qtyNum').textContent=quantity;
-  updateSubtotal();
+  document.getElementById('qtyNum').textContent=quantity; updateSubtotal();
 }
 function qty(d){
   if(!sel) return;
@@ -354,9 +466,7 @@ function qty(d){
   const enCarrito = (cart.find(i=>i.sku===sel.sku)||{}).cantidad || 0;
   let nq = Math.max(1, quantity + d);
   if(max >= 1 && (enCarrito + nq) > max){ nq = Math.max(1, max - enCarrito); toast('Solo hay '+max+' en existencia'+(enCarrito?(' (ya tiene '+enCarrito+' en el carrito)'):'')+'.', true); }
-  quantity = nq;
-  document.getElementById('qtyNum').textContent=quantity;
-  updateSubtotal();
+  quantity = nq; document.getElementById('qtyNum').textContent=quantity; updateSubtotal();
 }
 function updateSubtotal(){ const t=sel?sel.precio*quantity:0; document.getElementById('totalLbl').textContent='$'+t; }
 /* ---------- CARRITO ---------- */
@@ -367,15 +477,12 @@ function agregarAlCarrito(){
   const enCarrito = existente? existente.cantidad : 0;
   if(max >= 1 && (enCarrito + quantity) > max){ toast('No hay suficiente stock ('+max+' disponibles).', true); return; }
   if(existente){ existente.cantidad += quantity; }
-  else { cart.push({ sku:sel.sku, nombre:sel.nombre, precio:sel.precio, cantidad:quantity, stock:max }); }
+  else { cart.push({ sku:sel.sku, nombre:sel.nombre, precio:sel.precio, cantidad:quantity, stock:max, gaveta_id:sel.gaveta_id||null }); }
   sel=null; quantity=1;
   document.getElementById('selected').classList.remove('show');
   renderCarrito(); calcChange(); toast('Agregado al carrito ✔');
 }
-function quitarDelCarrito(sku){
-  cart = cart.filter(i=>i.sku!==sku);
-  renderCarrito(); calcChange();
-}
+function quitarDelCarrito(sku){ cart = cart.filter(i=>i.sku!==sku); renderCarrito(); calcChange(); }
 function renderCarrito(){
   const box=document.getElementById('cartList');
   if(cart.length===0){ box.innerHTML='<div class="alempty">Aún no hay productos. Busque y agregue.</div>'; }
@@ -400,7 +507,7 @@ function calcChange(){
   if(diff>=0){ lbl.textContent='$'+diff; lbl.className='change ok'; msg.innerHTML='<span class="ok">Entregue <b>$'+diff+'</b> de cambio</span>'; }
   else { lbl.textContent='$'+Math.abs(diff); lbl.className='change short'; msg.innerHTML='<span class="short">Faltan <b>$'+Math.abs(diff)+'</b></span>'; }
 }
-/* ---------- REGISTRAR: abre el RESUMEN de confirmación (no inserta aún) ---------- */
+/* ---------- REGISTRAR ---------- */
 function registrar(){
   if(cart.length===0){ alert('Agregue al menos un producto al carrito.'); return; }
   const total=cartTotal(); const cash=parseInt(cashStr||'0',10);
@@ -415,38 +522,27 @@ function registrar(){
   document.getElementById('confirmOverlay').classList.add('show');
 }
 function cancelarConfirmacion(){ document.getElementById('confirmOverlay').classList.remove('show'); }
-/* ---------- CONFIRMAR VENTA: registro ATOMICO vía fn_vender ---------- */
+/* ---------- CONFIRMAR VENTA (atómica vía fn_vender) ---------- */
+let pendingTicket=null, pendingSurtido=[];
 async function confirmarVenta(){
   if(cart.length===0){ cancelarConfirmacion(); return; }
   const total=cartTotal(); const cash=parseInt(cashStr||'0',10);
   const okBtn=document.getElementById('cfOkBtn'); okBtn.disabled=true; okBtn.textContent='Guardando…';
   try{
-    // Pre-check amistoso (el guard REAL es atómico en la base / fn_vender)
-    const skus=cart.map(i=>i.sku);
-    const { data:stk, error:e1 } = await sb.from('inventario').select('sku,stock')
-      .eq('local_id',session.id).in('sku',skus);
-    if(e1){ alert('No se pudo verificar el inventario.'); return; }
-    const stockMap={}; (stk||[]).forEach(r=>stockMap[r.sku]=r.stock);
-    for(const it of cart){
-      const disp = stockMap[it.sku]==null? 0 : stockMap[it.sku];
-      if(disp < it.cantidad){ alert('Sin stock suficiente de "'+it.nombre+'" ('+disp+' disponibles).'); return; }
-    }
-    // Registro atómico de TODA la venta (una sola transacción en la base)
     const items = cart.map(i=>({ sku:i.sku, nombre:i.nombre, cantidad:i.cantidad, precio:i.precio }));
     const { data:res, error } = await sb.rpc('fn_vender', {
-      p_local: session.id, p_recibido: cash, p_cambio: cash-total, p_items: items
-    });
+      p_local: session.id, p_recibido: cash, p_cambio: cash-total, p_items: items });
     if(error){
       const amable = /STOCK_INSUFICIENTE/.test(error.message)
-        ? 'Un producto se quedó sin stock suficiente. Actualice y vuelva a intentar.'
-        : error.message;
+        ? 'Un producto se quedó sin stock suficiente. Actualice y vuelva a intentar.' : error.message;
       toast('No se pudo registrar: '+amable, true); console.error(error); return;
     }
     const ids = (res && res.ids) ? res.ids : [];
     const folio = ids.length ? ('#'+ids[0]+(ids.length>1?(' a #'+ids[ids.length-1]):'')) : '—';
-    const ticket = { folio, sucursal:session.nombre_sucursal, fecha:Date.now(),
+    pendingTicket = { folio, sucursal:session.nombre_sucursal, fecha:Date.now(),
       items:cart.map(i=>({nombre:i.nombre, sku:i.sku, cantidad:i.cantidad, precio:i.precio})),
       total:total, recibido:cash, cambio:cash-total };
+    pendingSurtido = cart.map(i=>({nombre:i.nombre, sku:i.sku, cantidad:i.cantidad, gaveta_id:i.gaveta_id||null}));
     cancelarConfirmacion();
     cart=[]; sel=null; quantity=1; cashStr='';
     renderCarrito();
@@ -456,10 +552,10 @@ async function confirmarVenta(){
     document.getElementById('changeLbl').className='change';
     document.getElementById('changeMsg').innerHTML='&nbsp;';
     await cargarResumen(); await updateBell(); toast('Venta registrada ✔');
-    mostrarTicket(ticket);
+    abrirSurtido(pendingSurtido);
   } finally { okBtn.disabled=false; okBtn.textContent='✔ De acuerdo'; }
 }
-/* ---------- TICKET DIGITAL ---------- */
+/* ---------- TICKET ---------- */
 function mostrarTicket(t){
   document.getElementById('tkSuc').textContent = t.sucursal;
   document.getElementById('tkFecha').textContent = new Date(t.fecha).toLocaleString('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -473,6 +569,222 @@ function mostrarTicket(t){
   document.getElementById('ticketOverlay').classList.add('show');
 }
 function cerrarTicket(){ document.getElementById('ticketOverlay').classList.remove('show'); }
+
+/* ============ SURTIDO 3D · LOCALIZADOR ============ */
+const S3_LAYOUT = {
+ 1:{1:['N','N','N','N','W','W','W'],2:['N','N','N','N','N','N','N','N'],3:['N','N','N','N','W','W','W']},
+ 2:{1:['N','N','N','N','W','W','W'],2:['N','N','N','N','N','N','N','N'],3:['N','N','N','N','W','W','W']},
+ 3:{1:['N','N','N','N','W','W','W'],2:['N','N','N','N','W','W','W'],3:['N','N','N','N','N','N','W']}
+};
+const CAB_W=4.2, CAB_D=1.05, GAP=0.7, MARGIN=0.18, STAND=3.0;
+const uW=(CAB_W-2*MARGIN)/8, ROWH=0.5, SUBGAP=0.5, PULL=0.55;
+const S3 = { ready:false, renderer:null, scene:null, camera:null, controls:null,
+  drawers:null, dummy:new THREE.Object3D(), base:[], idOf:{}, glow:null, glowLabel:null,
+  WHITE:new THREE.Color(0xffffff), YELLOW:new THREE.Color(0xffd21a),
+  order:[], idx:0, curId:-1, prevId:-1, pull:0, camAnim:false,
+  camDest:new THREE.Vector3(), tgtDest:new THREE.Vector3(), t:0, maxH:0, tween:null };
+function s3ColHeight(col){ let r=0; for(const s of [1,2,3]) r+=S3_LAYOUT[col][s].length; return r*ROWH+2*SUBGAP+2*MARGIN; }
+function s3MakeTexture(text,{fg='#1c1c1c',bg=null,bold=true,size=52,pad=10}={}){
+  const cv=document.createElement('canvas'), ctx=cv.getContext('2d');
+  ctx.font=(bold?'bold ':'')+size+'px Segoe UI, Arial';
+  const w=Math.ceil(ctx.measureText(text).width)+pad*2;
+  cv.width=w; cv.height=size+pad*2;
+  ctx.font=(bold?'bold ':'')+size+'px Segoe UI, Arial';
+  if(bg){ ctx.fillStyle=bg; ctx.fillRect(0,0,cv.width,cv.height); }
+  ctx.fillStyle=fg; ctx.textBaseline='middle'; ctx.textAlign='center';
+  ctx.fillText(text,cv.width/2,cv.height/2);
+  const tx=new THREE.CanvasTexture(cv); tx.anisotropy=4; return {tx,ratio:cv.width/cv.height};
+}
+function s3Label(text,opts){
+  const {tx,ratio}=s3MakeTexture(text,opts);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthTest:(opts&&opts.depthTest===false)?false:true}));
+  const h=(opts&&opts.h)||0.5; sp.scale.set(h*ratio,h,1); return sp;
+}
+function s3SetInstance(i,x,y,z,w,h){
+  S3.dummy.position.set(x,y,z); S3.dummy.scale.set(w,h,CAB_D*0.92); S3.dummy.updateMatrix();
+  S3.drawers.setMatrixAt(i,S3.dummy.matrix);
+}
+function s3Build(){
+  const scene=new THREE.Scene(); scene.background=new THREE.Color(0x4A4F54);
+  scene.fog=new THREE.Fog(0x4A4F54, 30, 90);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x40454a,0.98));
+  const dl=new THREE.DirectionalLight(0xffffff,0.85); dl.position.set(6,16,12); scene.add(dl);
+  const dl2=new THREE.DirectionalLight(0xbfd4ff,0.35); dl2.position.set(-8,7,7); scene.add(dl2);
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(120,120), new THREE.MeshStandardMaterial({color:0xe8e6e0,roughness:1}));
+  floor.rotation.x=-Math.PI/2; scene.add(floor);
+  const grid=new THREE.GridHelper(120,60,0xc7c3ba,0xd6d2c9); grid.position.y=0.01; scene.add(grid);
+  const totalW=3*CAB_W+2*GAP;
+  S3.maxH=Math.max(s3ColHeight(1),s3ColHeight(2),s3ColHeight(3));
+  const list=[];
+  for(let col=1;col<=3;col++){
+    const left=-totalW/2+(col-1)*(CAB_W+GAP);
+    const colH=s3ColHeight(col); const topY=STAND+colH;
+    let g=0, subsPassed=0;
+    for(const sub of [1,2,3]){
+      const rowsArr=S3_LAYOUT[col][sub];
+      for(let ri=0;ri<rowsArr.length;ri++){
+        const typ=rowsArr[ri]; const n=(typ==='N')?8:4; const cells=(typ==='N')?1:2;
+        const y=topY-MARGIN-g*ROWH-subsPassed*SUBGAP-ROWH/2;
+        for(let p=1;p<=n;p++){
+          const startCell=(p-1)*cells; const w=cells*uW*0.92;
+          const x=left+MARGIN+startCell*uW+(cells*uW)/2;
+          list.push({id:`C${col}-S${sub}-R${ri+1}-P${p}`, col, sub, fila:ri+1, pos:p, x, y, z:0, w, h:ROWH*0.86});
+        }
+        g++;
+      }
+      subsPassed++;
+    }
+  }
+  const N=list.length;
+  const geo=new THREE.BoxGeometry(1,1,1);
+  const mat=new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:0.30,roughness:0.15,metalness:0.0,depthWrite:false,side:THREE.DoubleSide});
+  const inst=new THREE.InstancedMesh(geo,mat,N);
+  inst.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(N*3).fill(1),3);
+  S3.drawers=inst; S3.base=[]; S3.idOf={};
+  list.forEach((d,i)=>{ s3SetInstance(i,d.x,d.y,d.z,d.w,d.h); inst.setColorAt(i,S3.WHITE); S3.base[i]={...d}; S3.idOf[d.id]=i; });
+  inst.instanceMatrix.needsUpdate=true; inst.instanceColor.needsUpdate=true; scene.add(inst);
+  for(let col=1;col<=3;col++){
+    const left=-totalW/2+(col-1)*(CAB_W+GAP);
+    const bx=left+CAB_W/2; const colH=s3ColHeight(col); const cy=STAND+colH/2;
+    const back=new THREE.Mesh(new THREE.BoxGeometry(CAB_W,colH,0.08), new THREE.MeshStandardMaterial({color:0x2b2f33,roughness:0.8}));
+    back.position.set(bx,cy,-CAB_D/2); scene.add(back);
+    const edges=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(CAB_W,colH,CAB_D)), new THREE.LineBasicMaterial({color:0x1b1d1f}));
+    edges.position.set(bx,cy,0); scene.add(edges);
+    const legMat=new THREE.MeshStandardMaterial({color:0x1b1d1f,roughness:0.7});
+    [-1,1].forEach(s=>{ const leg=new THREE.Mesh(new THREE.BoxGeometry(0.09,STAND,0.09),legMat);
+      leg.position.set(bx+s*(CAB_W/2-0.3),STAND/2,CAB_D/2-0.15); scene.add(leg); });
+    const cross=new THREE.Mesh(new THREE.BoxGeometry(CAB_W*0.8,0.09,0.09),legMat);
+    cross.position.set(bx,0.15,CAB_D/2-0.15); scene.add(cross);
+    const head=s3Label('COLUMNA '+col,{fg:'#ffffff',size:56,h:0.6}); head.position.set(bx,STAND+colH+0.5,CAB_D/2); scene.add(head);
+    for(let c=0;c<8;c++){ const x=left+MARGIN+c*uW+uW/2;
+      const s=s3Label(String(c+1),{fg:'#c7cbcf',size:44,h:0.22}); s.position.set(x,STAND+colH+0.12,CAB_D/2); scene.add(s); }
+  }
+  const glow=new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshBasicMaterial({color:0xffcf1a,transparent:true,opacity:0.35,depthWrite:false}));
+  const gedge=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1,1,1)), new THREE.LineBasicMaterial({color:0xffe873}));
+  glow.add(gedge); glow.visible=false; scene.add(glow); S3.glow=glow; S3.scene=scene;
+}
+function abrirSurtido(items){
+  document.getElementById('surtidoOverlay').classList.add('show');
+  document.getElementById('s3DoneOv').classList.remove('show');
+  document.getElementById('s3List').classList.remove('open');
+  if(session) document.getElementById('s3Suc').textContent = session.nombre_sucursal;
+  setTimeout(()=>{ s3Init();
+    S3.order = (items||[]).map(it=>({ nombre:it.nombre, sku:it.sku, cantidad:it.cantidad, gaveta_id:it.gaveta_id||null, done:false }));
+    S3.idx=0; s3RenderList(); s3GoTo(0);
+  }, 60);
+}
+function s3Init(){
+  if(S3.ready){ s3Resize(); return; }
+  const canvas=document.getElementById('s3canvas');
+  const W=canvas.clientWidth||window.innerWidth, H=canvas.clientHeight||window.innerHeight;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); renderer.setSize(W,H,false);
+  s3Build();
+  const camera=new THREE.PerspectiveCamera(45,W/H,0.1,300);
+  const cy=STAND+S3.maxH*0.5; camera.position.set(0, cy, Math.max(S3.maxH,18)*1.25);
+  const controls=new THREE.OrbitControls(camera,canvas);
+  controls.enableDamping=true; controls.dampingFactor=0.09; controls.target.set(0,cy,0);
+  controls.minDistance=3; controls.maxDistance=80; controls.maxPolarAngle=Math.PI*0.92;
+  controls.addEventListener('start',()=>{ S3.camAnim=false; });
+  S3.renderer=renderer; S3.camera=camera; S3.controls=controls; S3.ready=true;
+  window.addEventListener('resize', s3Resize);
+  (function loop(){ requestAnimationFrame(loop); s3Animate(); })();
+}
+function s3Resize(){
+  if(!S3.ready) return;
+  const canvas=document.getElementById('s3canvas');
+  const W=canvas.clientWidth||window.innerWidth, H=canvas.clientHeight||window.innerHeight;
+  S3.renderer.setSize(W,H,false); S3.camera.aspect=W/H; S3.camera.updateProjectionMatrix();
+}
+function s3GoTo(i){
+  if(S3.order.length===0) return;
+  S3.idx=Math.max(0,Math.min(S3.order.length-1,i));
+  const it=S3.order[S3.idx];
+  const newId = (it.gaveta_id!=null && S3.idOf[it.gaveta_id]!=null)? S3.idOf[it.gaveta_id] : -1;
+  if(S3.prevId>=0 && S3.prevId!==newId){
+    S3.drawers.setColorAt(S3.prevId,S3.WHITE);
+    const b=S3.base[S3.prevId]; s3SetInstance(S3.prevId,b.x,b.y,b.z,b.w,b.h);
+  }
+  S3.curId=newId; S3.prevId=newId; S3.pull=0;
+  if(newId>=0){
+    S3.drawers.setColorAt(newId,S3.YELLOW); S3.drawers.instanceColor.needsUpdate=true;
+    const b=S3.base[newId];
+    S3.glow.visible=true; S3.glow.position.set(b.x,b.y,b.z); S3.glow.scale.set(b.w*1.04,b.h*1.06,CAB_D*1.0);
+    if(S3.glowLabel){ S3.scene.remove(S3.glowLabel); S3.glowLabel=null; }
+    S3.glowLabel=s3Label('C'+b.col+'·S'+b.sub+'·F'+b.fila+'·P'+b.pos,{fg:'#3d2f00',bg:'#ffe873',size:44,h:0.4,depthTest:false});
+    S3.glowLabel.position.set(b.x,b.y+b.h*1.3,b.z+1.0); S3.glowLabel.renderOrder=999; S3.scene.add(S3.glowLabel);
+    S3.camDest.set(b.x*0.55,b.y+0.5,CAB_D/2+6.2); S3.tgtDest.set(b.x,b.y,b.z); S3.camAnim=true;
+  } else {
+    S3.glow.visible=false; if(S3.glowLabel){ S3.scene.remove(S3.glowLabel); S3.glowLabel=null; }
+  }
+  S3.drawers.instanceMatrix.needsUpdate=true; s3UpdateGuide(); s3RenderList();
+}
+function s3UpdateGuide(){
+  const it=S3.order[S3.idx]; if(!it) return;
+  document.getElementById('s3Step').textContent='Gaveta '+(S3.idx+1)+' de '+S3.order.length;
+  const done=S3.order.filter(o=>o.done).length;
+  document.getElementById('s3Pct').textContent=Math.round(done/S3.order.length*100)+'%';
+  document.getElementById('s3Name').textContent=it.nombre;
+  document.getElementById('s3Sku').textContent='SKU: '+it.sku;
+  document.getElementById('s3Qty').textContent='× '+it.cantidad+' pza(s)';
+  const box=document.getElementById('s3LocBox'), val=document.getElementById('s3Loc');
+  if(it.gaveta_id && S3.idOf[it.gaveta_id]!=null){
+    const b=S3.base[S3.idOf[it.gaveta_id]];
+    box.classList.remove('none'); box.querySelector('.lbl').textContent='Ubicación de la gaveta';
+    val.innerHTML='Col <span>'+b.col+'</span> · Gab <span>'+b.sub+'</span> · Fila <span>'+b.fila+'</span> · Pos <span>'+b.pos+'</span>';
+  } else {
+    box.classList.add('none'); box.querySelector('.lbl').textContent='Sin ubicación';
+    val.textContent='⚠ Sin gaveta asignada. Pídale al administrador que ubique este producto.';
+  }
+  document.getElementById('s3Prev').disabled=(S3.idx===0);
+  document.getElementById('s3Done').textContent=it.done?'↺ Deshacer':'✔ Surtido';
+  document.getElementById('s3Done').style.background=it.done?'#B26A00':'#2E7D46';
+  const prog=document.getElementById('s3Prog'); prog.textContent=done+' / '+S3.order.length;
+  prog.classList.toggle('done', done===S3.order.length && S3.order.length>0);
+  document.getElementById('s3CartN').textContent=S3.order.length;
+}
+function surtidoPrev(){ if(S3.idx>0){ if(confirm('¿Seguro que desea regresar a la gaveta anterior?')) s3GoTo(S3.idx-1); } }
+function surtidoMarkDone(){
+  const it=S3.order[S3.idx]; if(!it) return;
+  it.done=!it.done; s3UpdateGuide(); s3RenderList();
+  if(S3.order.every(o=>o.done)){ setTimeout(()=>document.getElementById('s3DoneOv').classList.add('show'),350); }
+  else if(it.done){
+    const next=S3.order.findIndex((o,i)=>i>S3.idx && !o.done);
+    const any=S3.order.findIndex(o=>!o.done);
+    setTimeout(()=>s3GoTo(next>=0?next:(any>=0?any:S3.idx)),250);
+  }
+}
+function s3RenderList(){
+  const box=document.getElementById('s3ListBody');
+  box.innerHTML=S3.order.map((o,i)=>{
+    let loc='Sin gaveta';
+    if(o.gaveta_id && S3.idOf[o.gaveta_id]!=null){ const b=S3.base[S3.idOf[o.gaveta_id]]; loc='Col '+b.col+' · Gab '+b.sub+' · F '+b.fila+' · P '+b.pos; }
+    return `<div class="lrow ${i===S3.idx?'active':''} ${o.done?'done':''}" onclick="s3GoTo(${i})">
+      <div class="ck">${o.done?'✓':''}</div>
+      <div class="info"><div class="nm">${esc(o.nombre)}</div><div class="lc">${loc} · ${esc(o.sku)}</div></div>
+      <div class="qt">×${o.cantidad}</div></div>`;
+  }).join('') || '<div style="padding:20px;text-align:center;color:#5f6368">Sin productos.</div>';
+}
+function toggleS3List(){ document.getElementById('s3List').classList.toggle('open'); }
+function terminarSurtido(){
+  document.getElementById('surtidoOverlay').classList.remove('show');
+  document.getElementById('s3DoneOv').classList.remove('show');
+  if(pendingTicket){ mostrarTicket(pendingTicket); pendingTicket=null; }
+}
+function s3Animate(){
+  if(!S3.ready) return; S3.t+=0.05;
+  if(S3.camAnim){
+    S3.camera.position.lerp(S3.camDest,0.10); S3.controls.target.lerp(S3.tgtDest,0.12);
+    if(S3.camera.position.distanceTo(S3.camDest)<0.15) S3.camAnim=false;
+  }
+  if(S3.curId>=0){
+    S3.pull += (PULL-S3.pull)*0.15; const b=S3.base[S3.curId];
+    s3SetInstance(S3.curId,b.x,b.y,b.z+S3.pull,b.w,b.h); S3.drawers.instanceMatrix.needsUpdate=true;
+    S3.glow.position.z=b.z+S3.pull; S3.glow.material.opacity=0.28+0.14*Math.abs(Math.sin(S3.t));
+    if(S3.glowLabel) S3.glowLabel.position.z=b.z+S3.pull+1.0;
+  }
+  S3.controls.update(); S3.renderer.render(S3.scene,S3.camera);
+}
 /* ---------- RESUMEN CORTES QUINCENALES ---------- */
 function periodoActual(){
   const now=new Date(); const y=now.getFullYear(), m=now.getMonth();
@@ -486,8 +798,7 @@ function periodoActual(){
 async function cargarResumen(){
   const { data } = await sb.from('v_cortes_quincena').select('*')
     .eq('local_id', session.id).order('periodo_inicio',{ascending:false});
-  const rows=data||[];
-  const pa=periodoActual();
+  const rows=data||[]; const pa=periodoActual();
   const cur=rows.find(r=>r.ym===pa.ym && Number(r.q)===pa.q);
   document.getElementById('curPeriodo').textContent = pa.txt;
   document.getElementById('curVenta').textContent = money(cur?cur.venta_total:0);

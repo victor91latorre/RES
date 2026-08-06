@@ -1,9 +1,8 @@
 /* ============================================================
    CONFIG · Credenciales PÚBLICAS de Supabase
    ------------------------------------------------------------
-   La ANON KEY es pública por diseño (viaja al navegador): está
-   bien exponerla. Lo que NUNCA debe ir aquí ni en el repo es la
-   service_role key (esa vive solo en el panel de Supabase).
+   La ANON KEY es pública por diseño (viaja al navegador): es
+   seguro exponerla. NUNCA pongas aquí la service_role key.
    Para cambiar de proyecto, edita SOLO estas dos líneas.
    ============================================================ */
 window.SUPABASE_URL  = 'https://lvdpajgdjxakycrqplqb.supabase.co';

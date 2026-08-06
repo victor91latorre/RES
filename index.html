@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consigna · Acceso</title>
+<title>Resi-Store · Acceso</title>
 <style>
   *{ box-sizing:border-box; }
-  html,body{ margin:0; padding:0; height:100%;
-    font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; background:#4A4F54; color:#EDEEEF; }
+  html,body{ margin:0; padding:0; height:100%; font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; background:#4A4F54; color:#EDEEEF; }
   .wrap{ min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
-  h1{ font-size:26px; margin:0 0 6px; letter-spacing:.5px; }
-  .sub{ color:#c7cbcf; font-size:14px; margin-bottom:34px; text-align:center; }
+  .logo{ max-width:320px; width:70%; height:auto; margin-bottom:10px; }
+  .sub{ color:#c7cbcf; font-size:14px; margin-bottom:30px; text-align:center; }
   .cards{ display:grid; grid-template-columns:1fr 1fr; gap:18px; width:100%; max-width:640px; }
   @media (max-width:560px){ .cards{ grid-template-columns:1fr; } }
   a.card{ text-decoration:none; color:#1B1D1F; background:#D9DBDD; border:1px solid #9AA0A6; border-radius:10px;
@@ -24,18 +23,18 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>CONSIGNA</h1>
+    <img class="logo" src="logo.png" alt="Resi-Store">
     <div class="sub">Punto de venta en consignación · componentes electrónicos</div>
     <div class="cards">
       <a class="card" href="local.html">
         <div class="ico">🛒</div>
         <div class="t">Punto de venta</div>
-        <div class="d">Para el encargado del local. Inicia sesión, arma el carrito y registra ventas.</div>
+        <div class="d">Para el encargado del local. Inicia sesión, arma el carrito, registra ventas y ubica las gavetas en 3D.</div>
       </a>
       <a class="card admin" href="admin.html">
         <div class="ico">📊</div>
         <div class="t">Administración (matriz)</div>
-        <div class="d">Monitoreo en tiempo real, inventario por sucursal, arqueo y alta de sucursales.</div>
+        <div class="d">Monitoreo en tiempo real, inventario por sucursal, importación CSV con gavetas, arqueo y alta de sucursales.</div>
       </a>
     </div>
     <div class="foot">Conectado a Supabase · despliegue en Vercel</div>
